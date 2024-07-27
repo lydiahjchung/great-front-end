@@ -6,12 +6,17 @@ on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: ["feature/testimonial-card"]
+
     paths:
       - "testimonial-card/**"
+      - ".github/workflows/**"
+
   pull_request:
     branches: ["feature/testimonial-card"]
+
     paths:
       - "testimonial-card/**"
+      - ".github/workflows/**"
 
 jobs:
   test:
