@@ -23,9 +23,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./testimonial-card
 
     steps:
       - name: Checkout repository
@@ -53,7 +50,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages
-          path: ./testimonial-card/dist
+          path: ./dist
 
   deploy:
     needs: build
@@ -75,7 +72,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: github-pages
-          path: ./testimonial-card/dist
+          path: ./dist
 
       - name: Deploy to GitHub Pages
         id: deployment
