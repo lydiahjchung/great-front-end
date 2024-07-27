@@ -85,3 +85,10 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           token: ${{ secrets.TOKEN_FOR_CI }}
+
+      - name: Output deployed URL
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const url = '${{ steps.deployment.outputs.page_url }}';
+            console.log(`Deployed site is available at: ${url}`);
