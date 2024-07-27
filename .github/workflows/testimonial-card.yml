@@ -1,0 +1,94 @@
+# This is a basic workflow to help you get started with Actions
+name: Testimonial Card
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: ["feature/testimonial-card"]
+
+    paths:
+      - "testimonial-card/**"
+      - ".github/workflows/**"
+      - ".github/actions/**"
+
+  pull_request:
+    branches: ["feature/testimonial-card"]
+
+    paths:
+      - "testimonial-card/**"
+      - ".github/workflows/**"
+      - ".github/actions/**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and Dependencies
+        uses: ./.github/actions/setup-node-dependencies
+        with:
+          working-directory: ./testimonial-card
+
+      - name: Run tests
+        run: pnpm test
+        working-directory: ./testimonial-card
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and Dependencies
+        uses: ./.github/actions/setup-node-dependencies
+        with:
+          working-directory: ./testimonial-card
+
+      - name: Build project
+        run: pnpm run build
+        working-directory: ./testimonial-card
+
+      - name: Upload production-ready build files
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages
+          path: ./testimonial-card/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    permissions:
+      pages: write
+      contents: write
+      id-token: write
+      actions: read
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: ./dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          token: ${{ secrets.TOKEN_FOR_CI }}
+
+      - name: Output deployed URL
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const url = '${{ steps.deployment.outputs.page_url }}';
+            console.log(`Deployed site is available at: ${url}`);
