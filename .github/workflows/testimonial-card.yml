@@ -30,9 +30,12 @@ jobs:
 
       - name: Setup Node.js and Dependencies
         uses: ./.github/actions/setup-node-dependencies
+        with:
+          working-directory: ./testimonial-card
 
       - name: Run tests
         run: pnpm test
+        working-directory: ./testimonial-card
 
   build:
     runs-on: ubuntu-latest
@@ -42,15 +45,18 @@ jobs:
 
       - name: Setup Node.js and Dependencies
         uses: ./.github/actions/setup-node-dependencies
+        with:
+          working-directory: ./testimonial-card
 
       - name: Build project
         run: pnpm run build
+        working-directory: ./testimonial-card
 
       - name: Upload production-ready build files
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages
-          path: ./dist
+          path: ./testimonial-card/dist
 
   deploy:
     needs: build
