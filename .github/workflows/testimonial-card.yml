@@ -1,12 +1,13 @@
-name: Testimonial Card
+# This is a basic workflow to help you get started with Actions
+name: CI Testimonial Card
 
+# Controls when the workflow will run
 on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches:
-      - feature/testimonial-card
-
-    paths:
-      - "testimonial-card/**"
+    branches: ["feature/testimonial-card"]
+  pull_request:
+    branches: ["feature/testimonial-card"]
 
 jobs:
   test:
@@ -47,8 +48,8 @@ jobs:
       - name: install Nodejs
         uses: actions/setup-node@v3
         with:
-          node-version: 20
-          cache: "pnpm"
+          node-version: 22
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install
