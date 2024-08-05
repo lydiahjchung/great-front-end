@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js and Dependencies
-        uses: ./.github/actions/setup-node-dependencies
+        uses: ./.github/actions/setup-node-dependencies.yml
         with:
           working-directory: ./testimonial-card
 
@@ -59,36 +59,8 @@ jobs:
           path: ./testimonial-card/dist
 
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    permissions:
-      pages: write
-      contents: write
-      id-token: write
-      actions: read
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: github-pages
-          path: ./dist
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          token: ${{ secrets.TOKEN_FOR_CI }}
-
-      - name: Output deployed URL
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const url = '${{ steps.deployment.outputs.page_url }}';
-            console.log(`Deployed site is available at: ${url}`);
+    needs: [test, build]
+    uses: ./.github/actions/deploy.yml
+    with:
+      project-path: ./testimonial-card
+      artifact-name: testimonial-card-pages
