@@ -55,7 +55,7 @@ jobs:
       - name: Upload production-ready build files
         uses: actions/upload-pages-artifact@v3
         with:
-          name: github-pages
+          name: testimonial-card-pages
           path: ./testimonial-card/dist
 
   deploy:
