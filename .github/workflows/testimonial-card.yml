@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js and Dependencies
-        uses: ./.github/actions/setup-node-dependencies.yml
+        uses: ./.github/actions/setup-node-dependencies
         with:
           working-directory: ./testimonial-card
 
@@ -60,7 +60,7 @@ jobs:
 
   deploy:
     needs: [test, build]
-    uses: ./.github/actions/deploy.yml
+    uses: ./.github/workflows/deploy.yml
     with:
       project-path: ./testimonial-card
       artifact-name: testimonial-card-pages
