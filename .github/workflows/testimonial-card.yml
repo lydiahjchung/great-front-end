@@ -5,7 +5,7 @@ name: Testimonial Card
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: ["feature/testimonial-card"]
+    branches: ["feature/testimonial-card", "main"]
 
     paths:
       - "testimonial-card/**"
@@ -13,7 +13,7 @@ on:
       - ".github/actions/**"
 
   pull_request:
-    branches: ["feature/testimonial-card"]
+    branches: ["feature/testimonial-card", "main"]
 
     paths:
       - "testimonial-card/**"
@@ -55,40 +55,12 @@ jobs:
       - name: Upload production-ready build files
         uses: actions/upload-pages-artifact@v3
         with:
-          name: github-pages
+          name: testimonial-card-pages
           path: ./testimonial-card/dist
 
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    permissions:
-      pages: write
-      contents: write
-      id-token: write
-      actions: read
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: github-pages
-          path: ./dist
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          token: ${{ secrets.TOKEN_FOR_CI }}
-
-      - name: Output deployed URL
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const url = '${{ steps.deployment.outputs.page_url }}';
-            console.log(`Deployed site is available at: ${url}`);
+    needs: [test, build]
+    uses: ./.github/workflows/deploy.yml
+    with:
+      project-path: ./testimonial-card
+      artifact-name: testimonial-card-pages
