@@ -48,6 +48,14 @@ jobs:
         with:
           working-directory: ./testimonial-card
 
+      - name: Set VITE_BASE_URL
+        run: |
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            echo "VITE_BASE_URL=/" >> $GITHUB_ENV
+          else
+            echo "VITE_BASE_URL=/great-front-end/testimonial-card/" >> $GITHUB_ENV
+          fi
+
       - name: Build project
         run: pnpm run build
         working-directory: ./testimonial-card
